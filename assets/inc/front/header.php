@@ -14,10 +14,10 @@
                         <a class="nav-link" href="http://localhost/portfolio/contact.php">CONTACT</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="http://localhost/portfolio/admin/">ESPACE MEMBRE</a>
+                        <a class="nav-link" href="#">ESPACE MEMBRE</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="http://localhost/portfolio/admin/">ESPACE ADMIN</a>
+                        <a class="nav-link link-danger" href="http://localhost/portfolio/admin/">ESPACE ADMIN</a>
                     </li>
                     <!-- <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">

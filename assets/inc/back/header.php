@@ -18,15 +18,14 @@
                             <li><a class="dropdown-item" href="http://localhost/portfolio/admin/manageUsers.php">Utilisateurs</a></li>
                             <li><a class="dropdown-item" href="http://localhost/portfolio/admin/manageSkills.php">Compétences</a></li>
                             <li><a class="dropdown-item" href="http://localhost/portfolio/admin/manageMessages.php">Messages</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item" href="http://localhost/portfolio/admin/createUser.php">Nouvel User</a></li>
                         </ul>
                     </li>
                 </ul>
+                <div class="mx-1">
+                    <a class="btn btn-success" href="http://localhost/portfolio/admin/createUser.php">NOUVEL UTILISATEUR</a>
+                </div>
                 <form action="../core/userController.php" method="post">
-                    <input type="hidden" name="do" value="logout">
+                    <input type="hidden" name="action" value="logout">
                     <button class="btn btn-danger" type="submit">DECONNEXION</button>
                 </form>
             </div>

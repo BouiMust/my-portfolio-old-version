@@ -1,6 +1,6 @@
 <?php
 // Fichier de connexion à la base de données (portfolio)
-// Configuration de connexion à la BDD
+// Fichier de configuration de connexion à la BDD
 
 // var de connexion
 $online = false;

@@ -4,33 +4,49 @@
 // - deconnecter l'user en cliquant le bouton 'deconnecter'
 
 session_start();
+require './authentificationAdmin.php';
 
-// Vérifie s'il y a une action
-$action = 'empty';
+// Aucune action n'est programmée à la base (on initialise)
+$action = '';
 
-// si la clé 'do' est présente dans $_POST (avec le input de type hidden et la value 'log-admin')
-if (isset($_POST['do'])) {
-    // alors stocke 'log-admin' dans $action
-    $action = $_POST['do'];
+// Vérifie si la clé 'action' est présente dans $_POST (contient la nature de l'action dans la value du input hidden)
+if (isset($_POST['action'])) {
+    // Sauvegarde la valeur dans $action
+    $action = $_POST['action'];
 }
 
-// vérifie l'action
+// vérifie l'action envoyé par l'utilisateur
 switch ($action) {
-        // log-admin correspond au input avec la value 'log-admin'
-    case 'log-admin':
-        logAdmin();
+        // login correspond au hidden input avec la value 'login'
+    case 'login':
+        login();
         break;
     case 'logout':
         logout();
+        break;
+    case 'read':
+        readUser();
+        break;
+    case 'update':
+        updateUser();
+        break;
+    case 'delete':
+        deleteUser();
         break;
     default;
         break;
 }
 
-
 // FONCTION LOGIN (quand l'admin se connecte)
-function logAdmin()
+function login()
 {
+    // Si un des champs est vide
+    if (!$_POST['email'] || !$_POST['password']) {
+        $_SESSION['error'] = 'Veuillez remplir tous les champs.';
+        header('Location: ../admin/index.php');
+        exit();
+    }
+
     // Fichier databaseConnexion.php requis pour la connexion
     require './databaseConnexion.php';
 
@@ -102,4 +118,25 @@ function logout()
     // redirection
     header('Location: ../index.php');
     exit();
+}
+
+// FONCTION READ (Récupérer 1 user)
+function readUser()
+{
+    header('Location: ../admin/detailUser.php');
+    exit;
+}
+
+// FONCTION UPDATE (Modifier 1 user)
+function updateUser()
+{
+    echo 'update one user';
+    exit;
+}
+
+// FONCTION DELETE (Supprimer 1 user)
+function deleteUser()
+{
+    echo 'delete one user';
+    exit;
 }
