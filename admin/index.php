@@ -9,11 +9,11 @@
 <main>
     <?php
     if (isset($_SESSION["message"])) {
-        echo '<div class="alert alert-success">' . $_SESSION["message"] . '</div>';
+        echo '<p class="alert alert-success fs-5 text-center p-1">' . $_SESSION["message"] . '</p>';
         unset($_SESSION["message"]);
     }
     if (isset($_SESSION['error'])) {
-        echo '<div class="alert alert-danger">' . $_SESSION["error"] . '</div>';
+        echo '<p class="alert alert-danger fs-5 text-center p-1">' . $_SESSION["error"] . '</p>';
         unset($_SESSION["error"]);
     };
     ?>

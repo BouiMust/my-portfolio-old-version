@@ -31,8 +31,8 @@ switch ($action) {
 // FONCTION LOGIN (quand l'admin se connecte)
 function logAdmin()
 {
-    // Fichier login.php requis pour la connexion
-    require './login.php';
+    // Fichier databaseConnexion.php requis pour la connexion
+    require './databaseConnexion.php';
 
     // formatage du mail
     $email = trim(strtolower($_POST['email']));
@@ -52,7 +52,7 @@ function logAdmin()
     // S'il n'y a pas d'utilisateur dans la BDD 
     if (mysqli_num_rows($query) < 1) {
         // message alerte
-        $_SESSION['error'] = 'No user in data base';
+        $_SESSION['error'] = 'No user matches.';
         // redirection
         header('Location: ../admin/index.php');
         exit();
@@ -64,7 +64,7 @@ function logAdmin()
     // Vérification password
     if (!password_verify(trim($_POST['password']), $user['password'])) {
         // message alerte
-        $_SESSION['error'] = 'Incorrect password';
+        $_SESSION['error'] = 'Incorrect password.';
         // redirection
         header('Location: ../admin/index.php');
         exit();
@@ -73,7 +73,7 @@ function logAdmin()
     // Vérification role (1 = Admin)
     if ((int)$user['role'] !== 1) {
         // message alerte
-        $_SESSION['error'] = 'Access denied';
+        $_SESSION['error'] = 'Access denied.';
         // redirection
         header('Location: ../index.php');
         exit();
@@ -85,7 +85,7 @@ function logAdmin()
     $_SESSION['first_name'] = $user['first_name'];
     $_SESSION['isLog'] = true;
     $_SESSION['role'] = $user['role'];
-    $_SESSION['message'] = "Hello {$user['first_name']} {$user['last_name']}";
+    $_SESSION['message'] = "Hello {$user['first_name']} {$user['last_name']}.";
     header('Location: ../admin/dashboardAdmin.php');
     exit();
 }

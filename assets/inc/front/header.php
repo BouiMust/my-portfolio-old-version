@@ -14,6 +14,9 @@
                         <a class="nav-link" href="http://localhost/portfolio/contact.php">CONTACT</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="http://localhost/portfolio/admin/">ESPACE MEMBRE</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="http://localhost/portfolio/admin/">ESPACE ADMIN</a>
                     </li>
                     <!-- <li class="nav-item dropdown">

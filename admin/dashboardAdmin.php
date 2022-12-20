@@ -1,28 +1,21 @@
-<!-- TABLEAU DE BORD ADMIN -->
+<!-- TABLEAU DE BORD (ADMIN UNIQUEMENT) -->
 
 <?php require_once '../assets/inc/back/head.php' ?>
 <title>Tableau de bord</title>
 
-<?php
-// Vérifie si l'user est admin en analysant les données en session
-if (!($_SESSION['isLog'] && $_SESSION['role'] === '1')) {
-    $_SESSION['error'] = 'Accès refusé.';
-    header('Location: ../index.php');
-    exit();
-}
-?>
+<?php require_once '../core/authentificationAdmin.php' ?>
 
 <body>
 
     <?php require_once '../assets/inc/back/header.php' ?>
 
     <main>
-        <div class="card bg-dark" style="border: 2px solid #666;">
-            <h1 class="text-center">TABLEAU DE BORD</h1>
+        <div class="bg-dark mb-2" style="border: 2px solid #666;">
+            <h4 class="text-center pt-2">TABLEAU DE BORD</h4>
         </div>
         <?php
         if (isset($_SESSION["message"])) {
-            echo '<div class="alert alert-success fs-5 text-center">' . $_SESSION["message"] . '</div>';
+            echo '<p class="alert alert-success fs-5 text-center p-1">' . $_SESSION["message"] . '</p>';
             unset($_SESSION["message"]);
         };
         ?>
