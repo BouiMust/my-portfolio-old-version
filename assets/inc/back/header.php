@@ -10,6 +10,9 @@
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="http://localhost/portfolio/admin/dashboardAdmin.php">TABLEAU DE BORD</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="http://localhost/portfolio/admin/manageUsers.php">Utilisateurs</a>
+                    </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             GESTION
@@ -18,6 +21,7 @@
                             <li><a class="dropdown-item" href="http://localhost/portfolio/admin/manageUsers.php">Utilisateurs</a></li>
                             <li><a class="dropdown-item" href="http://localhost/portfolio/admin/manageSkills.php">Compétences</a></li>
                             <li><a class="dropdown-item" href="http://localhost/portfolio/admin/manageMessages.php">Messages</a></li>
+                            <li><a class="dropdown-item" href="http://localhost/portfolio/admin/manageProjects.php">Réalisations</a></li>
                         </ul>
                     </li>
                 </ul>

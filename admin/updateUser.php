@@ -1,5 +1,5 @@
-<!-- USER DETAIL (ADMIN UNIQUEMENT) -->
-<!-- Page qui affiche les détails sur un utilisateur -->
+<!-- USER UPDATE (ADMIN UNIQUEMENT) -->
+<!-- Page qui permet de modifier les infos d'un utilisateur -->
 
 <?php require_once '../assets/inc/back/head.php' ?>
 <title>Détail utilisateur</title>
@@ -7,21 +7,10 @@
 <!-- Vérifie si l'utilisateur connecté est Admin -->
 <?php require_once '../core/authentificationAdmin.php' ?>
 
-
-<!-- GET ONE USER FROM DB WITH ID IN URL PARAMS-->
+<!-- GET ONE USER FROM DB -->
 <?php
-
-// Fichier databaseConnexion.php requis pour la connexion à la BDD
-require '../core/databaseConnexion.php';
-
-// Préparation de la requête : Récupère la ligne correspondant à l'id dans la table user
-$sql = "SELECT * FROM user WHERE id = '{$_GET['id']}'";
-
-// Execution de la requête avec les params de connexion et sauvegarde la reponse dans $query
-$query = mysqli_query($connexion, $sql) or exit(mysqli_error($connexion));
-
-// Met les données sous forme de tableau associatif et exploitable
-$user = mysqli_fetch_assoc($query);
+require '../core/userController.php';
+$user = readOneUser($_GET['id']);
 ?>
 
 <body>
@@ -30,31 +19,41 @@ $user = mysqli_fetch_assoc($query);
 
     <main>
         <div class="bg-dark mb-2" style="border: 2px solid #666;">
-            <h4 class="text-center pt-1">Détails sur l'utilisateur n°<?= $user['id'] ?></h4>
+            <h4 class="text-center pt-1">Modifier l'utilisateur n°<?= $user['id'] ?></h4>
         </div>
+        <?php
+        if (isset($_SESSION['error'])) {
+            echo '<p class="alert alert-danger fs-5 text-center p-1">' . $_SESSION["error"] . '</p>';
+            unset($_SESSION["error"]);
+        };
+        ?>
         <div class="card bg-dark pb-0" style="border: 2px solid #666;">
 
-            <table class="table table-striped table-dark">
+            <form action='../core/userController.php' method='post'>
+                <table class="table table-striped table-dark">
 
-                <!-- EN-TETES DU TABLEAU -->
-                <tr>
-                    <th>Id</th>
-                    <th>Nom</th>
-                    <th>Prénom</th>
-                    <th>Email</th>
-                    <!-- <th>Mot de passe</th> -->
-                    <th>Rôle</th>
-                    <th></th>
-                </tr>
+                    <!-- EN-TETES DU TABLEAU -->
+                    <tr>
+                        <th>Id</th>
+                        <th>Nom</th>
+                        <th>Prénom</th>
+                        <th>Email</th>
+                        <th>Mot de passe</th>
+                        <th>Rôle</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
 
-                <!-- AFFICHE TOUS LES USERS -->
-
-                <?php
-                $role = $user['role'] === '1' ? 'Admin' : 'Utilisateur';
-                echo "
-                <tr class='align-middle'>
-                <td>{$user['id']}</td>
-                <form action='../core/userController.php?id={$user['id']}' method='post'>
+                    <!-- AFFICHE L'UTILISATEUR A MODIFIER -->
+                    <!-- Je place l'action (=update) et l'id de l'user dans un input caché -->
+                    <!-- il me serviront pour modifier l'user (dans userController.php) -->
+                    <?php
+                    $selected = $user['role'] === '2' ? 'selected' : '';
+                    echo "
+                    <tr class='align-middle'>
+                    <td name='id' id='id' value='{$user['id']}'>{$user['id']}</td>
+                    <input type='hidden' name='action' value='update'>
+                    <input type='hidden' name='id' value='{$user['id']}'>
                     <td>
                     <input class='form-control' type='text' name='last_name' id='last_name' value='{$user['last_name']}'>
                     </td>
@@ -65,18 +64,22 @@ $user = mysqli_fetch_assoc($query);
                     <input class='form-control' type='email' name='email' id='email' value='{$user['email']}'>
                     </td>
                     <td>
+                    <input class='form-control' type='password' name='password' id='password'>
+                    </td>
+                    <td>
                     <select class='pointer' style='padding: 10px;' name='role' id='role'>
-                    <option value='Admin'>Admin</option>
-                    <option value='Utilisateur'>Utilisateur</option>
+                    <option value=1>Admin</option>
+                    <option value=2 $selected>Utilisateur</option>
                     </select>
                     </td>
-                    <td class='text-center'><form action='../core/userController.php?id={$user['id']}' method='post'>
-                    <input type='hidden' name='action' value='update'>
-                    <button class='btn btn-success fs-5 py-1 px-2' type='submit'>Valider</button></td>
-                    </tr>
-                    </form>";
-                ?>
-            </table>
+                    <td class='text-center'>
+                    <button class='btn btn-success py-2 px-4' type='submit'>Valider</button></td>
+                    <td class='text-center'>
+                    <a href='./detailUser.php?id={$user['id']}' class='btn btn-danger py-2 px-4'>Retour</a></td>
+                    </tr>";
+                    ?>
+                </table>
+            </form>
         </div>
     </main>
 

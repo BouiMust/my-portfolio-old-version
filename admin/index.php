@@ -1,14 +1,13 @@
-<!--
-    Ce fichier va permettre à l'Admin de se connecter avec ses identifiants.
-    Path : http://localhost/portfolio/admin/
--->
+<!-- PAGE DE CONNEXION POUR L'UTILISATEUR -->
+<!-- Path : http://localhost/portfolio/admin/ -->
+
 <?php include '../assets/inc/front/head.php' ?>
-<title>Connexion Admin</title>
+<title>Connexion</title>
 <?php include '../assets/inc/front/header.php' ?>
 
 <main>
     <div class="bg-dark mb-2" style="border: 2px solid #666;">
-        <h4 class="text-center pt-1">Connexion Admin</h4>
+        <h4 class="text-center pt-1">CONNEXION</h4>
     </div>
     <div class="card bg-dark" style="border: 2px solid #666;">
         <div class="col-4 mx-auto py-4">

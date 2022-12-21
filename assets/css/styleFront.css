@@ -5,3 +5,15 @@ body {
     color: silver;
     margin: auto;
 }
+
+.alert-success {
+    background-color: #2aa46b;
+    color: #FFF;
+    font-style: italic !important;
+}
+
+.alert-danger {
+    background-color: #dc3545;
+    color: #FFF;
+    font-style: italic !important;
+}
