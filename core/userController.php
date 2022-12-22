@@ -41,9 +41,7 @@ function login()
 {
     // Vérifie si un des champs est vide
     if (!$_POST['email'] || !$_POST['password']) {
-        $_SESSION['error'] = 'Veuillez remplir tous les champs.';
-        header('Location: ../admin/index.php');
-        exit();
+        redirectWithError('../admin/index.php', 'Veuillez remplir tous les champs.');
     }
 
     // Fichier databaseConnexion.php requis pour la connexion
@@ -66,11 +64,7 @@ function login()
 
     // S'il n'y a pas d'utilisateur dans la BDD 
     if (mysqli_num_rows($query) < 1) {
-        // message alerte
-        $_SESSION['error'] = 'Aucun compte ne correspond.';
-        // redirection
-        header('Location: ../admin/index.php');
-        exit();
+        redirectWithError('../admin/index.php', 'Aucun compte ne correspond.');
     }
 
     // Sinon on met sous forme de tableau associatif les données de l'admin récupérés
@@ -78,21 +72,15 @@ function login()
 
     // Vérification password
     if (!password_verify(trim($_POST['password']), $user['password'])) {
-        // message alerte
-        $_SESSION['error'] = 'Mot de pase incorrect.';
-        // redirection
-        header('Location: ../admin/index.php');
-        exit();
+        redirectWithError('../admin/index.php', 'Mot de pase incorrect.');
     }
 
     // Vérification role (1 = Admin)
-    if ((int)$user['role'] !== 1) {
-        // message alerte
-        $_SESSION['error'] = 'Accès refusé.';
-        // redirection
-        header('Location: ../index.php');
-        exit();
-    }
+    // if ((int)$user['role'] !== 1) {
+    //     var_dump('ok');
+    //     exit;
+    //     redirectWithError('../index.php', 'Accès refusé.');
+    // }
 
     // Sinon la connexion est réussie
     // on sauvegarde des données dans la session (qui permettent de donner accès au back-office)
@@ -100,9 +88,7 @@ function login()
     $_SESSION['first_name'] = $user['first_name'];
     $_SESSION['isLog'] = true;
     $_SESSION['role'] = $user['role'];
-    $_SESSION['message'] = "Bonjour {$user['first_name']} {$user['last_name']}.";
-    header('Location: ../admin/dashboardAdmin.php');
-    exit();
+    redirectWithSuccess('../admin/dashboardAdmin.php', "Bonjour {$user['first_name']} {$user['last_name']}.");
 }
 
 // FONCTION LOGOUT (quand l'utilisateur se déconnecte)
@@ -111,11 +97,7 @@ function logout()
     // supprime la session courante et toutes les données en session
     session_destroy();
     session_start();
-    // message d'alerte
-    $_SESSION['message'] = 'Vous vous êtes déconnecté.';
-    // redirection
-    header('Location: ../index.php');
-    exit();
+    redirectWithSuccess('../index.php', 'Vous vous êtes déconnecté.');
 }
 
 // FUNCTION READ ALL USERS (quand on récupère tous les utilisateurs)
@@ -144,7 +126,7 @@ function readOneUser($id)
     require '../core/databaseConnexion.php';
 
     // Préparation de la requête : Récupère la ligne correspondant à l'id dans la table user
-    $sql = "SELECT * FROM user WHERE id = '{$_GET['id']}'";
+    $sql = "SELECT * FROM user WHERE id = '$id'";
 
     // Execution de la requête avec les params de connexion et sauvegarde la reponse dans $query
     $query = mysqli_query($connexion, $sql) or exit(mysqli_error($connexion));
@@ -158,38 +140,26 @@ function createUser()
 {
     // Vérifie si tous les champs du formulaire sont remplis
     if (!$_POST['last_name'] || !$_POST['first_name'] || !$_POST['email'] || !$_POST['password']) {
-        $_SESSION["error"] = 'Veuillez remplir tous les champs';
-        header('Location: ../admin/createUser.php');
-        exit();
+        redirectWithError('../admin/createUser.php', 'Veuillez remplir tous les champs.');
     }
 
     // Vérifie la longueur des caractères saisies
-    if (strlen($_POST['last_name']) > 256) {
-        $_SESSION['error'] = 'Le nom doit comporter entre 1 et 255 caractères';
-        header('Location: ../admin/createUser.php');
-        exit();
+    if (strlen($_POST['last_name']) > 255) {
+        redirectWithError('../admin/createUser.php', 'Le nom doit comporter entre 1 et 255 caractères.');
     }
-    if (strlen($_POST['first_name']) > 256) {
-        $_SESSION['error'] = 'Le prénom doit comporter entre 1 et 255 caractères';
-        header('Location: ../admin/createUser.php');
-        exit();
+    if (strlen($_POST['first_name']) > 255) {
+        redirectWithError('../admin/createUser.php', 'Le prénom doit comporter entre 1 et 255 caractères.');
     }
-    if (strlen($_POST['email']) > 256) {
-        $_SESSION['error'] = 'L\'email doit comporter entre 1 et 255 caractères';
-        header('Location: ../admin/createUser.php');
-        exit();
+    if (strlen($_POST['email']) > 255) {
+        redirectWithError('../admin/createUser.php', 'L\'email doit comporter entre 1 et 255 caractères.');
     }
-    if (strlen($_POST['password']) > 256) {
-        $_SESSION['error'] = 'Le mot de passe doit comporter entre 1 et 255 caractères';
-        header('Location: ../admin/createUser.php');
-        exit();
+    if (strlen($_POST['password']) > 255) {
+        redirectWithError('../admin/createUser.php', 'Le mot de passe doit comporter entre 1 et 255 caractères.');
     }
 
     // Vérifie le format d'écriture de l'email
     if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
-        $_SESSION["error"] = 'Email non valide';
-        header('Location: ../admin/createUser.php');
-        exit();
+        redirectWithError('../admin/createUser.php', 'Email non valide');
     }
 
     // on récupère le fichier de connexion databaseConnexion.php qui correspond aux params de connexion de la bdd
@@ -216,12 +186,7 @@ function createUser()
     // Retourne une erreur si la requête echoue
     mysqli_query($connexion, $sql) or exit(mysqli_error($connexion));
 
-    // Message en cas de succès
-    $_SESSION["message"] = "L'utilisateur $first_name $last_name est ajouté à la base de données.";
-
-    // redirection vers le tableau de bord Admin
-    header("Location: ../admin/dashboardAdmin.php");
-    exit();
+    redirectWithSuccess('../admin/manageUsers.php', "L'utilisateur $first_name $last_name est ajouté à la base de données.");
 }
 
 // FONCTION UPDATE (quand on modifie un utilisateur)
@@ -231,45 +196,31 @@ function updateUser()
 
     // Vérifie si tous les champs du formulaire sont remplis
     if (!$_POST['last_name'] || !$_POST['first_name'] || !$_POST['email'] || !$_POST['role'] || !$_POST['password']) {
-        $_SESSION['error'] = 'Veuillez remplir tous les champs.';
-        header("Location: ../admin/updateUser.php?id={$_POST['id']}");
-        exit();
+        redirectWithError("../admin/updateUser.php?id={$_POST['id']}", 'Veuillez remplir tous les champs.');
     }
 
     // Vérifie la longueur des caractères saisies
-    if (strlen($_POST['last_name']) > 256) {
-        $_SESSION['error'] = 'Le nom doit comporter entre 1 et 255 caractères';
-        header("Location: ../admin/updateUser.php?id={$_POST['id']}");
-        exit();
+    if (strlen($_POST['last_name']) > 255) {
+        redirectWithError("../admin/updateUser.php?id={$_POST['id']}", 'Le nom doit comporter entre 1 et 255 caractères');
     }
-    if (strlen($_POST['first_name']) > 256) {
-        $_SESSION['error'] = 'Le prénom doit comporter entre 1 et 255 caractères';
-        header("Location: ../admin/updateUser.php?id={$_POST['id']}");
-        exit();
+    if (strlen($_POST['first_name']) > 255) {
+        redirectWithError("../admin/updateUser.php?id={$_POST['id']}", 'Le prénom doit comporter entre 1 et 255 caractères');
     }
-    if (strlen($_POST['email']) > 256) {
-        $_SESSION['error'] = 'L\'email doit comporter entre 1 et 255 caractères';
-        header("Location: ../admin/updateUser.php?id={$_POST['id']}");
-        exit();
+    if (strlen($_POST['email']) > 255) {
+        redirectWithError("../admin/updateUser.php?id={$_POST['id']}", 'L\'email doit comporter entre 1 et 255 caractères');
     }
-    if (strlen($_POST['password']) > 256) {
-        $_SESSION['error'] = 'Le mot de passe doit comporter entre 1 et 255 caractères';
-        header("Location: ../admin/updateUser.php?id={$_POST['id']}");
-        exit();
+    if (strlen($_POST['password']) > 255) {
+        redirectWithError("../admin/updateUser.php?id={$_POST['id']}", 'Le nom doit comporter entre 1 et 255 caractères');
     }
 
     // Vérifie le format d'écriture de l'email
     if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
-        $_SESSION["error"] = 'Email non valide';
-        header("Location: ../admin/updateUser.php?id={$_POST['id']}");
-        exit();
+        redirectWithError("../admin/updateUser.php?id={$_POST['id']}", 'Email non valide');
     }
 
     // Vérifie si le rôle est bien défini
     if ($_POST['role'] !== '1' && $_POST['role'] !== '2') {
-        $_SESSION["error"] = 'Le rôle n\'est pas défini.';
-        header("Location: ../admin/updateUser.php?id={$_POST['id']}");
-        exit();
+        redirectWithError("../admin/updateUser.php?id={$_POST['id']}", 'Le rôle n\'est pas défini.');
     }
 
     // Récupère le fichier de connexion database
@@ -298,12 +249,7 @@ function updateUser()
     // Retourne une erreur si la requête echoue
     mysqli_query($connexion, $sql) or exit(mysqli_error($connexion));
 
-    // Message de succès
-    $_SESSION['message'] = "Compte utilisateur modifié.";
-
-    // Redirige vers la page de détail de l'utilisateur
-    header("Location: ../admin/detailUser.php?id={$_POST['id']}");
-    exit;
+    redirectWithSuccess("../admin/detailUser.php?id={$_POST['id']}", 'Compte utilisateur modifié.');
 }
 
 // FONCTION DELETE (quand on supprime un utilisateur)
@@ -313,29 +259,41 @@ function deleteUser()
 
     require_once '../core/databaseConnexion.php';
 
-    // Requête SQL pour supprimer l'utilisateur
-    $sql = "
-        DELETE FROM user
-        WHERE id = {$_POST['id']}
-    ";
+    // Préparation de la requête : Récupère la ligne correspondant à l'id dans la table user
+    $sql = "SELECT * FROM user WHERE id = '{$_POST["id"]}'";
+    // Execution de la requête avec les params de connexion et sauvegarde la reponse dans $query
+    $query = mysqli_query($connexion, $sql) or exit(mysqli_error($connexion));
+    $user = mysqli_fetch_assoc($query);
 
-    // Execution de la requête ou retourne erreur
-    mysqli_query($connexion, $sql) or exit(mysqli_error($connexion));
+    // Vérifie si le compte à supprimer est Admin
+    if ($user['role'] === '1') {
+        redirectWithError('../admin/manageUsers.php', 'Vous ne pouvez pas supprimer un compte administrateur.');
+    } else {
+        // Requête SQL pour supprimer l'utilisateur
+        $sql = "
+            DELETE FROM user
+            WHERE id = {$_POST['id']}
+        ";
 
-    // Message de succès
-    $_SESSION['message'] = "Compte utilisateur n°{$_POST['id']} supprimé.";
+        // Execution de la requête ou retourne erreur
+        mysqli_query($connexion, $sql) or exit(mysqli_error($connexion));
 
-    // Redirige vers la page de détail de l'utilisateur
-    header("Location: ../admin/manageUsers.php");
+        redirectWithSuccess('../admin/manageUsers.php', "Compte utilisateur n°{$_POST['id']} supprimé.");
+    }
+}
+
+// FONCTION REDIRECTION AVEC SUCCES (redirige l'utilisateur avec un message de succès)
+function redirectWithSuccess($path, $message)
+{
+    $_SESSION['message'] = "<p class='alert alert-success fs-5 text-center p-1'>$message</p>";
+    header("Location: $path");
     exit;
 }
 
-function redirection($path, $message)
+// FONCTION REDIRECTION AVEC ERREUR (redirige l'utilisateur avec un message d'erreur)
+function redirectWithError($path, $error)
 {
-    // Message de succès
-    $_SESSION['message'] = $message;
-
-    // Redirige vers la page de détail de l'utilisateur
+    $_SESSION['message'] = "<p class='alert alert-danger fs-5 text-center p-1'>$error</p>";
     header("Location: $path");
     exit;
 }

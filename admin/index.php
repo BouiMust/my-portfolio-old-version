@@ -3,22 +3,19 @@
 
 <?php include '../assets/inc/front/head.php' ?>
 <title>Connexion</title>
+
 <?php include '../assets/inc/front/header.php' ?>
 
 <main>
     <div class="bg-dark mb-2" style="border: 2px solid #666;">
-        <h4 class="text-center pt-1">CONNEXION</h4>
+        <h4 class="text-center pt-2">CONNEXION</h4>
     </div>
     <div class="card bg-dark" style="border: 2px solid #666;">
         <div class="col-4 mx-auto py-4">
             <?php
-            if (isset($_SESSION["message"])) {
-                echo '<p class="alert alert-success fs-5 text-center p-1">' . $_SESSION["message"] . '</p>';
-                unset($_SESSION["message"]);
-            }
-            if (isset($_SESSION['error'])) {
-                echo '<p class="alert alert-danger fs-5 text-center p-1">' . $_SESSION["error"] . '</p>';
-                unset($_SESSION["error"]);
+            if (isset($_SESSION['message'])) {
+                echo $_SESSION['message'];
+                unset($_SESSION['message']);
             };
             ?>
             <form class="form-group" action="../core/userController.php" method="post">
