@@ -58,7 +58,7 @@ function createSkill()
         // Vérifie si le fichier chargé est une image
         if (strtolower(explode("/", $_FILES['image']['type'])[0]) === 'image') {
             $imageName = nameImage();
-            saveImage(nameImage());
+            saveImage($imageName);
         } else {
             redirectWithError('../admin/createSkill.php', 'Erreur de fichier.');
         }
@@ -93,6 +93,17 @@ function createSkill()
 // FUNCTION READ ALL USERS (quand on récupère tous les utilisateurs)
 function readAllSkills()
 {
+    // Fichier databaseConnexion.php requis pour la connexion à la BDD
+    require '../core/databaseConnexion.php';
+
+    // Préparation de la requête : Récupérer toutes les lignes de la table user
+    $sql = "SELECT * FROM skill";
+
+    // Execution de la requête avec les params de connexion et sauvegarde la reponse dans $query
+    $query = mysqli_query($connexion, $sql) or exit(mysqli_error($connexion));
+
+    // Retourne sous forme de tableau associatif toutes les données de la table user
+    return  mysqli_fetch_all($query, MYSQLI_ASSOC);
 }
 
 // FUNCTION READ ONE USER (quand on récupère un utilisateur depuis son id)
@@ -142,10 +153,10 @@ function nameImage()
 }
 
 // FONCTION DE SAUVEGARDE DE L'IMAGE (sauvegarde l'image chargé dans le dossier 'upload')
-function saveImage($imageName)
+function saveImage($name)
 {
     // SAUVEGARDE L'IMAGE
     // prend 2 params : chemin du fichier source et chemin + nom de sauvegarde dans le back
-    $imagePath = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'upload' . DIRECTORY_SEPARATOR . $imageName;
+    $imagePath = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'upload' . DIRECTORY_SEPARATOR . $name;
     move_uploaded_file($_FILES['image']['tmp_name'], $imagePath);
 }

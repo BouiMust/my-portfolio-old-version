@@ -1,4 +1,4 @@
-<!-- PAGE INDEX -->
+<!-- PAGE DE CONTACT-->
 
 <?php include './assets/inc/front/head.php' ?>
 <title>Contact</title>

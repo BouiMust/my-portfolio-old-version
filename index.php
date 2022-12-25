@@ -1,4 +1,4 @@
-<!-- PAGE D'ACCUEIL -->
+<!-- PAGE D'ACCUEIL DU PORTFOLIO -->
 
 <?php include './assets/inc/front/head.php' ?>
 <title>Portfolio</title>

@@ -18,10 +18,10 @@
                                     GESTION
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="http://localhost/portfolio/admin/manageUsers.php">Utilisateurs</a></li>
-                                    <li><a class="dropdown-item" href="http://localhost/portfolio/admin/manageSkills.php">Compétences</a></li>
-                                    <li><a class="dropdown-item" href="http://localhost/portfolio/admin/manageMessages.php">Messages</a></li>
-                                    <li><a class="dropdown-item" href="http://localhost/portfolio/admin/manageProjects.php">Réalisations</a></li>
+                                    <li><a class="dropdown-item" href="http://localhost/portfolio/admin/user/manageUsers.php">Utilisateurs</a></li>
+                                    <li><a class="dropdown-item" href="http://localhost/portfolio/admin/skill/manageSkills.php">Compétences</a></li>
+                                    <li><a class="dropdown-item" href="http://localhost/portfolio/admin/message/manageMessages.php">Messages</a></li>
+                                    <li><a class="dropdown-item" href="http://localhost/portfolio/admin/project/manageProjects.php">Réalisations</a></li>
                                 </ul>
                             </li>
                             <li class="nav-item dropdown">
@@ -29,10 +29,10 @@
                                     CREATION
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="http://localhost/portfolio/admin/createUser.php">Utilisateur</a></li>
-                                    <li><a class="dropdown-item" href="http://localhost/portfolio/admin/createSkill.php">Compétence</a></li>
-                                    <li><a class="dropdown-item" href="http://localhost/portfolio/admin/createMessage.php">Message</a></li>
-                                    <li><a class="dropdown-item" href="http://localhost/portfolio/admin/createProject.php">Réalisation</a></li>
+                                    <li><a class="dropdown-item" href="http://localhost/portfolio/admin/user/createUser.php">Utilisateur</a></li>
+                                    <li><a class="dropdown-item" href="http://localhost/portfolio/admin/skill/createSkill.php">Compétence</a></li>
+                                    <li><a class="dropdown-item" href="http://localhost/portfolio/admin/message/createMessage.php">Message</a></li>
+                                    <li><a class="dropdown-item" href="http://localhost/portfolio/admin/project/createProject.php">Réalisation</a></li>
                                 </ul>
                             </li>
                         </ul>

@@ -112,9 +112,6 @@ function readAllUsers()
     // Execution de la requête avec les params de connexion et sauvegarde la reponse dans $query
     $query = mysqli_query($connexion, $sql) or exit(mysqli_error($connexion));
 
-    // mysqli_num_row compte le nombre de lignes dans la table user
-    // $usersCount = mysqli_num_rows($query);
-
     // Retourne sous forme de tableau associatif toutes les données de la table user
     return  mysqli_fetch_all($query, MYSQLI_ASSOC);
 }
@@ -133,6 +130,22 @@ function readOneUser($id)
 
     // Retourn les données sous forme de tableau associatif et exploitable
     return mysqli_fetch_assoc($query);
+}
+
+// FUNCTION COUNT ALL USERS (quand on compte le nombre total d'utilisateurs)
+function countAllUsers()
+{
+    // Fichier requis pour la connexion à la BDD
+    require '../core/databaseConnexion.php';
+
+    // Préparation de la requête : Récupèrer toutes les lignes de la table user
+    $sql = "SELECT * FROM user";
+
+    // Execution de la requête avec les params de connexion et sauvegarde la reponse dans $query
+    $query = mysqli_query($connexion, $sql) or exit(mysqli_error($connexion));
+
+    // Compte le nombre de lignes obtenus
+    return mysqli_num_rows($query);
 }
 
 // FUNCTION CREATE (quand on crée un utilisateur)
