@@ -18,10 +18,10 @@
                                     GESTION
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="http://localhost/portfolio/admin/user/manageUsers.php">Utilisateurs</a></li>
-                                    <li><a class="dropdown-item" href="http://localhost/portfolio/admin/skill/manageSkills.php">Compétences</a></li>
-                                    <li><a class="dropdown-item" href="http://localhost/portfolio/admin/message/manageMessages.php">Messages</a></li>
-                                    <li><a class="dropdown-item" href="http://localhost/portfolio/admin/project/manageProjects.php">Réalisations</a></li>
+                                    <li><a class="dropdown-item" href="http://localhost/portfolio/admin/user">Utilisateurs</a></li>
+                                    <li><a class="dropdown-item" href="http://localhost/portfolio/admin/skill">Compétences</a></li>
+                                    <li><a class="dropdown-item" href="http://localhost/portfolio/admin/message">Messages</a></li>
+                                    <li><a class="dropdown-item" href="http://localhost/portfolio/admin/project">Réalisations</a></li>
                                 </ul>
                             </li>
                             <li class="nav-item dropdown">
@@ -36,7 +36,7 @@
                                 </ul>
                             </li>
                         </ul>
-                        <form action="../core/userController.php" method="post">
+                        <form action="http://localhost/portfolio/core/userController.php" method="post">
                             <input type="hidden" name="action" value="logout">
                             <button class="btn btn-danger" type="submit">DECONNEXION</button>
                         </form>
