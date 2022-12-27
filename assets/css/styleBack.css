@@ -17,3 +17,8 @@ body {
     color: #FFF;
     font-style: italic !important;
 }
+
+main {
+    /* Pour fixer le footer si le main n'est pas assez grand */
+    min-height: 83vh;
+}
