@@ -2,7 +2,6 @@
 <?php
 if (!($_SESSION['isLog'] && $_SESSION['role'] === '1')) {
     $_SESSION['message'] = '<p class="alert alert-danger fs-5 text-center p-1">Accès refusé.</p>';
-    header('Location: ../index.php');
-    exit();
+    exit(header('Location: http://localhost/portfolio/'));
 }
 ?>

@@ -55,11 +55,23 @@ function nameImage()
     return $imageName;
 }
 
-// FONCTION DE SAUVEGARDE DE L'IMAGE (sauvegarde l'image dans le dossier 'upload')
-function saveImage($name)
+// FONCTION DE SAUVEGARDE DE L'IMAGE SUR LE DISQUE (sauvegarde l'image dans le dossier 'upload')
+function saveImageToDisk($imageName)
 {
     // SAUVEGARDE L'IMAGE
     // prend 2 params : chemin du fichier source et chemin + nom de sauvegarde dans le back
-    $imagePath = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'upload' . DIRECTORY_SEPARATOR . $name;
+    $imagePath = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'upload' . DIRECTORY_SEPARATOR . $imageName;
     move_uploaded_file($_FILES['image']['tmp_name'], $imagePath);
+}
+
+// FONCTION DE SUPPRESSION D'IMAGE DU DISQUE
+function deleteImageFromDisk($connexion, $id)
+{
+    // Récupère le nom de l'ancienne image dans la BDD
+    $sql = "SELECT image FROM skill WHERE id_skill = $id";
+    $query = mysqli_query($connexion, $sql) or exit(mysqli_error($connexion));
+    $oldImageName = mysqli_fetch_assoc($query)['image'];
+
+    // Supprime l'ancienne image du disque
+    unlink(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'upload' . DIRECTORY_SEPARATOR . $oldImageName);
 }

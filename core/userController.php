@@ -1,4 +1,5 @@
 <?php
+
 // Ce fichier permet de :
 // - logger l'user en récupérant les champs du formulaire admin/index.php
 // - deconnecter l'user en cliquant le bouton 'deconnecter'
@@ -15,6 +16,9 @@ if (isset($_POST['action'])) {
     $action = $_POST['action'];
 }
 
+// IMPORT FONCTIONS GENERALES
+require __DIR__ . DIRECTORY_SEPARATOR . 'generalController.php';
+
 // Execute une fonction selon la nature de l'action
 switch ($action) {
     case 'login':
@@ -27,10 +31,10 @@ switch ($action) {
         createUser();
         break;
     case 'update':
-        updateUser();
+        updateUser($_POST['id']);
         break;
     case 'delete':
-        deleteUser();
+        deleteUser($_POST['id']);
         break;
     default;
         break;
@@ -100,11 +104,11 @@ function logout()
     redirectWithSuccess('../index.php', 'Vous vous êtes déconnecté.');
 }
 
-// FUNCTION READ ALL USERS (quand on récupère tous les utilisateurs)
-function readAllUsers()
+// FUNCTION GET ALL USERS (quand on récupère tous les utilisateurs)
+function getAllUsers()
 {
     // Fichier databaseConnexion.php requis pour la connexion à la BDD
-    require '../core/databaseConnexion.php';
+    require '../../core/databaseConnexion.php';
 
     // Préparation de la requête : Récupérer toutes les lignes de la table user
     $sql = "SELECT * FROM user";
@@ -112,18 +116,29 @@ function readAllUsers()
     // Execution de la requête avec les params de connexion et sauvegarde la reponse dans $query
     $query = mysqli_query($connexion, $sql) or exit(mysqli_error($connexion));
 
-    // Retourne sous forme de tableau associatif toutes les données de la table user
-    return  mysqli_fetch_all($query, MYSQLI_ASSOC);
+    // Récupère la table user sous forme de tableau associatif et exploitable
+    $users = mysqli_fetch_all($query, MYSQLI_ASSOC);
+
+    // Trie les utilisateurs par id
+    function sortById($a, $b)
+    {
+        if ($a == $b) return 0;
+        return ($a < $b) ? -1 : 1;
+    }
+    usort($users, "sortById");
+
+    // Retourne les users
+    return $users;
 }
 
-// FUNCTION READ ONE USER (quand on récupère un utilisateur depuis son id)
-function readOneUser($id)
+// FUNCTION GET ONE USER (quand on récupère un utilisateur depuis son id)
+function getOneUser($id)
 {
     // Fichier databaseConnexion.php requis pour la connexion à la BDD
-    require '../core/databaseConnexion.php';
+    require '../../core/databaseConnexion.php';
 
     // Préparation de la requête : Récupère la ligne correspondant à l'id dans la table user
-    $sql = "SELECT * FROM user WHERE id = '$id'";
+    $sql = "SELECT * FROM user WHERE id_user = '$id'";
 
     // Execution de la requête avec les params de connexion et sauvegarde la reponse dans $query
     $query = mysqli_query($connexion, $sql) or exit(mysqli_error($connexion));
@@ -132,109 +147,45 @@ function readOneUser($id)
     return mysqli_fetch_assoc($query);
 }
 
-// FUNCTION COUNT ALL USERS (quand on compte le nombre total d'utilisateurs)
-function countAllUsers()
-{
-    // Fichier requis pour la connexion à la BDD
-    require '../core/databaseConnexion.php';
-
-    // Préparation de la requête : Récupèrer toutes les lignes de la table user
-    $sql = "SELECT * FROM user";
-
-    // Execution de la requête avec les params de connexion et sauvegarde la reponse dans $query
-    $query = mysqli_query($connexion, $sql) or exit(mysqli_error($connexion));
-
-    // Compte le nombre de lignes obtenus
-    return mysqli_num_rows($query);
-}
-
 // FUNCTION CREATE (quand on crée un utilisateur)
 function createUser()
 {
-    // Vérifie si tous les champs du formulaire sont remplis
-    if (!$_POST['last_name'] || !$_POST['first_name'] || !$_POST['email'] || !$_POST['password']) {
-        redirectWithError('../admin/createUser.php', 'Veuillez remplir tous les champs.');
-    }
+    // Vérifie l'authentification admin
+    require __DIR__ . DIRECTORY_SEPARATOR . 'authentificationAdmin.php';
 
-    // Vérifie la longueur des caractères saisies
-    if (strlen($_POST['last_name']) > 255) {
-        redirectWithError('../admin/createUser.php', 'Le nom doit comporter entre 1 et 255 caractères.');
-    }
-    if (strlen($_POST['first_name']) > 255) {
-        redirectWithError('../admin/createUser.php', 'Le prénom doit comporter entre 1 et 255 caractères.');
-    }
-    if (strlen($_POST['email']) > 255) {
-        redirectWithError('../admin/createUser.php', 'L\'email doit comporter entre 1 et 255 caractères.');
-    }
-    if (strlen($_POST['password']) > 255) {
-        redirectWithError('../admin/createUser.php', 'Le mot de passe doit comporter entre 1 et 255 caractères.');
-    }
-
-    // Vérifie le format d'écriture de l'email
-    if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
-        redirectWithError('../admin/createUser.php', 'Email non valide');
-    }
+    // Vérifie la validité du formulaire
+    checkUserForm('../admin/user/createUser.php');
 
     // on récupère le fichier de connexion databaseConnexion.php qui correspond aux params de connexion de la bdd
     require_once '../core/databaseConnexion.php';
 
     // addslashes prend en compte les caract spec, trim supprime les espaces, ucfirst met la 1ere lettre en maj
     // strtolower pour mettre en min
-    $first_name = strip_tags(addslashes(trim(ucfirst($_POST["first_name"]))));
-    $last_name = strip_tags(addslashes(trim(ucfirst($_POST["last_name"]))));
-    $email = strip_tags(trim(strtolower($_POST["email"])));
+    $first_name = strip_tags(addslashes(trim(ucfirst($_POST['first_name']))));
+    $last_name = strip_tags(addslashes(trim(ucfirst($_POST['last_name']))));
+    $email = strip_tags(trim(strtolower($_POST['email'])));
     $password = strip_tags(password_hash(trim($_POST['password']), PASSWORD_BCRYPT, ['cost' => 12]));
-    $role = (int)2; // ROLE 2 = ROLE UTILISATEUR LAMBDA (DE BASE)
-    if (isset($_POST["isAdmin"])) {
-        $role = (int)1; // ROLE 1 = ROLE ADMIN
-    }
+    $profile = (int)$_POST['profile'];
+    $role = (int)$_POST['role']; // role 1 = Admin. role 2 = utilisateur
 
     // Création de la requête SQL pour enregistrer l'utilisateur
     $sql = "
-    INSERT INTO user (first_name,last_name,email,password,role)
-    VALUE ('$first_name', '$last_name', '$email', '$password', '$role')
+    INSERT INTO user (first_name,last_name,email,password,profile,role)
+    VALUE ('$first_name', '$last_name', '$email', '$password', '$profile', '$role')
     ";
 
-    // Envoie de la requête avec les params de connexion du fichier databaseConnexion.php
-    // Retourne une erreur si la requête echoue
-    mysqli_query($connexion, $sql) or exit(mysqli_error($connexion));
+    // Execute la requête : soit réussi ou soit appel la fonction catchSqlError en cas d'echec
+    mysqli_query($connexion, $sql) or catchSqlError($connexion, '../admin/user/createUser.php');
 
-    redirectWithSuccess('../admin/manageUsers.php', "L'utilisateur $first_name $last_name est ajouté à la base de données.");
+    redirectWithSuccess('../admin/user', "L'utilisateur $first_name $last_name a été ajouté.");
 }
 
 // FONCTION UPDATE (quand on modifie un utilisateur)
-function updateUser()
+function updateUser($id)
 {
-    require './authentificationAdmin.php';
+    require __DIR__ . DIRECTORY_SEPARATOR . 'authentificationAdmin.php';
 
-    // Vérifie si tous les champs du formulaire sont remplis
-    if (!$_POST['last_name'] || !$_POST['first_name'] || !$_POST['email'] || !$_POST['role'] || !$_POST['password']) {
-        redirectWithError("../admin/updateUser.php?id={$_POST['id']}", 'Veuillez remplir tous les champs.');
-    }
-
-    // Vérifie la longueur des caractères saisies
-    if (strlen($_POST['last_name']) > 255) {
-        redirectWithError("../admin/updateUser.php?id={$_POST['id']}", 'Le nom doit comporter entre 1 et 255 caractères');
-    }
-    if (strlen($_POST['first_name']) > 255) {
-        redirectWithError("../admin/updateUser.php?id={$_POST['id']}", 'Le prénom doit comporter entre 1 et 255 caractères');
-    }
-    if (strlen($_POST['email']) > 255) {
-        redirectWithError("../admin/updateUser.php?id={$_POST['id']}", 'L\'email doit comporter entre 1 et 255 caractères');
-    }
-    if (strlen($_POST['password']) > 255) {
-        redirectWithError("../admin/updateUser.php?id={$_POST['id']}", 'Le nom doit comporter entre 1 et 255 caractères');
-    }
-
-    // Vérifie le format d'écriture de l'email
-    if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
-        redirectWithError("../admin/updateUser.php?id={$_POST['id']}", 'Email non valide');
-    }
-
-    // Vérifie si le rôle est bien défini
-    if ($_POST['role'] !== '1' && $_POST['role'] !== '2') {
-        redirectWithError("../admin/updateUser.php?id={$_POST['id']}", 'Le rôle n\'est pas défini.');
-    }
+    checkUserForm("../admin/user/updateUser.php?id=$id");
 
     // Récupère le fichier de connexion database
     require_once '../core/databaseConnexion.php';
@@ -245,6 +196,7 @@ function updateUser()
     $last_name = strip_tags(addslashes(trim(ucfirst($_POST["last_name"]))));
     $email = strip_tags(trim(strtolower($_POST["email"])));
     $password = strip_tags(password_hash(trim($_POST['password']), PASSWORD_BCRYPT, ['cost' => 12]));
+    $profile = (int)$_POST['profile'];
     $role = (int)$_POST["role"];
 
     // Requête SQL pour modifier l'utilisateur
@@ -254,59 +206,82 @@ function updateUser()
         last_name = '$last_name',
         email = '$email',
         password = '$password',
+        profile = '$profile',
         role = '$role'
-        WHERE id = {$_POST['id']}
+        WHERE id_user = $id
     ";
 
     // Envoie de la requête
     // Retourne une erreur si la requête echoue
-    mysqli_query($connexion, $sql) or exit(mysqli_error($connexion));
+    mysqli_query($connexion, $sql) or catchSqlError($connexion, "../admin/user/updateUser.php?id=$id");
 
-    redirectWithSuccess("../admin/detailUser.php?id={$_POST['id']}", 'Compte utilisateur modifié.');
+    redirectWithSuccess("../admin/user/detailUser.php?id=$id", 'Compte utilisateur modifié.');
 }
 
 // FONCTION DELETE (quand on supprime un utilisateur)
-function deleteUser()
+function deleteUser($id)
 {
-    require './authentificationAdmin.php';
+    require __DIR__ . DIRECTORY_SEPARATOR . 'authentificationAdmin.php';
 
     require_once '../core/databaseConnexion.php';
 
     // Préparation de la requête : Récupère la ligne correspondant à l'id dans la table user
-    $sql = "SELECT * FROM user WHERE id = '{$_POST["id"]}'";
+    $sql = "SELECT * FROM user WHERE id_user = '$id'";
     // Execution de la requête avec les params de connexion et sauvegarde la reponse dans $query
     $query = mysqli_query($connexion, $sql) or exit(mysqli_error($connexion));
     $user = mysqli_fetch_assoc($query);
 
     // Vérifie si le compte à supprimer est Admin
     if ($user['role'] === '1') {
-        redirectWithError('../admin/manageUsers.php', 'Vous ne pouvez pas supprimer un compte administrateur.');
+        redirectWithError('../admin/user', 'Vous ne pouvez pas supprimer un compte administrateur.');
     } else {
         // Requête SQL pour supprimer l'utilisateur
         $sql = "
             DELETE FROM user
-            WHERE id = {$_POST['id']}
+            WHERE id_user = $id
         ";
 
         // Execution de la requête ou retourne erreur
         mysqli_query($connexion, $sql) or exit(mysqli_error($connexion));
 
-        redirectWithSuccess('../admin/manageUsers.php', "Compte utilisateur n°{$_POST['id']} supprimé.");
+        redirectWithSuccess('../admin/user', "Compte utilisateur n°$id supprimé.");
     }
 }
 
-// FONCTION REDIRECTION AVEC SUCCES (redirige l'utilisateur avec un message de succès)
-function redirectWithSuccess($path, $message)
+// FONCTION CHECK FORM (vérifie la validité du formulaire, prend le chemin de redirection en param, en cas d'invalidité du form)
+function checkUserForm($redirectionPath)
 {
-    $_SESSION['message'] = "<p class='alert alert-success fs-5 text-center p-1'>$message</p>";
-    header("Location: $path");
-    exit;
-}
+    // Vérifie si tous les champs du formulaire sont remplis
+    if (!$_POST['last_name'] || !$_POST['first_name'] || !$_POST['email'] || !$_POST['role'] || !$_POST['password']) {
+        redirectWithError($redirectionPath, 'Veuillez remplir tous les champs.');
+    }
 
-// FONCTION REDIRECTION AVEC ERREUR (redirige l'utilisateur avec un message d'erreur)
-function redirectWithError($path, $error)
-{
-    $_SESSION['message'] = "<p class='alert alert-danger fs-5 text-center p-1'>$error</p>";
-    header("Location: $path");
-    exit;
+    // Vérifie la longueur des caractères saisies
+    if (strlen($_POST['last_name']) > 255) {
+        redirectWithError($redirectionPath, 'Le nom doit comporter entre 1 et 255 caractères');
+    }
+    if (strlen($_POST['first_name']) > 255) {
+        redirectWithError($redirectionPath, 'Le prénom doit comporter entre 1 et 255 caractères');
+    }
+    if (strlen($_POST['email']) > 255) {
+        redirectWithError($redirectionPath, 'L\'email doit comporter entre 1 et 255 caractères');
+    }
+    if (strlen($_POST['password']) > 255) {
+        redirectWithError($redirectionPath, 'Le nom doit comporter entre 1 et 255 caractères');
+    }
+
+    // Vérifie le format d'écriture de l'email
+    if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
+        redirectWithError($redirectionPath, 'Email non valide');
+    }
+
+    // Vérifie si la photo de profil est bien définie
+    if (!isset($_POST['profile']) || (int)$_POST['profile'] < 1 || 9 < (int)$_POST['profile']) {
+        redirectWithError($redirectionPath, 'La photo de profil n\'est pas définie.');
+    }
+
+    // Vérifie si le rôle est bien défini
+    if ($_POST['role'] !== '1' && $_POST['role'] !== '2') {
+        redirectWithError($redirectionPath, 'Le rôle n\'est pas défini.');
+    }
 }

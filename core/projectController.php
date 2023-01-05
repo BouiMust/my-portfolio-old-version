@@ -1,5 +1,5 @@
 <?php
-// Ce fichier permet de récupérer, créer, modifier et supprimer une compétence
+// Ce fichier permet de récupérer, créer, modifier et supprimer un projet/une réalisation
 
 if (session_status() === 1) session_start();
 $action = '';
@@ -13,49 +13,49 @@ require __DIR__ . DIRECTORY_SEPARATOR . 'generalController.php';
 
 switch ($action) {
     case 'create':
-        createSkill();
+        createProject();
         break;
     case 'update':
-        updateSkill($_POST['id']);
+        updateProject($_POST['id']);
         break;
     case 'delete':
-        deleteSkill($_POST['id']);
+        deleteProject($_POST['id']);
         break;
     default;
         break;
 }
 
-// FUNCTION GET ALL SKILLS (quand on récupère toutes les compétences)
-function getAllSkills()
+// FUNCTION GET ALL PROJECTS (quand on récupère toutes les compétences)
+function getAllProjects()
 {
     require dirname(__DIR__) . DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARATOR . 'databaseConnexion.php';
-    $sql = "SELECT * FROM skill";
+    $sql = "SELECT * FROM project";
     $query = mysqli_query($connexion, $sql) or exit(mysqli_error($connexion));
-    $skills = mysqli_fetch_all($query, MYSQLI_ASSOC);
+    $projects = mysqli_fetch_all($query, MYSQLI_ASSOC);
     function sortById($a, $b)
     {
         if ($a == $b) return 0;
         return ($a < $b) ? -1 : 1;
     }
-    usort($skills, "sortById");
-    return $skills;
+    usort($projects, "sortById");
+    return $projects;
 }
 
-// FUNCTION GET ONE SKILL (quand on récupère une compétence depuis son id)
-function getOneSkill($id)
+// FUNCTION GET ONE PROJECT (quand on récupère une compétence depuis son id)
+function getOneProject($id)
 {
     require dirname(__DIR__) . DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARATOR . 'databaseConnexion.php';
-    $sql = "SELECT * FROM skill WHERE id_skill = '$id'";
+    $sql = "SELECT * FROM project WHERE id_project = '$id'";
     $query = mysqli_query($connexion, $sql) or exit(mysqli_error($connexion));
     return mysqli_fetch_assoc($query);
 }
 
 // FUNCTION CREATE (quand on crée une compétence)
-function createSkill()
+function createProject()
 {
     require __DIR__ . DIRECTORY_SEPARATOR . 'authentificationAdmin.php';
 
-    checkSkillForm('../admin/skill/createSkill.php');
+    checkProjectForm('../admin/project/createProject.php');
 
     // Aucun nom d'image de base
     $imageName = '';
@@ -68,7 +68,7 @@ function createSkill()
             $imageName = nameImage();
             saveImageToDisk($imageName);
         } else {
-            redirectWithError('../admin/skill/createSkill.php', 'Erreur de fichier.');
+            redirectWithError('../admin/project/createProject.php', 'Erreur de fichier.');
         }
     }
 
@@ -77,30 +77,31 @@ function createSkill()
 
     // On récupère toutes les données du formulaire
     $title = strip_tags(ucwords(strtolower($_POST['title'])));
-    $type = (int)$_POST['type'];
     $text = $_POST['text'];
+    $date_start = $_POST['date-start'];
+    $date_end = $_POST['date-end'];
     $image = $imageName;
     $link = $_POST['link'];
-    $active = (int)$_POST['isActive'];
+    // $active = (int)$_POST['active'];
 
     // Création de la requête SQL avec les données ci-dessus
     $sql = "
-    INSERT INTO skill (title,type,text,image,link,active)
-    VALUE ('$title', '$type', '$text', '$image', '$link', '$active')
+    INSERT INTO project (title,text, date_start, date_end, image,link)
+    VALUE ('$title', '$text', '$date_start', '$date_end', '$image', '$link')
     ";
 
     // Envoie de la requête. Retourne une erreur si echoue
     mysqli_query($connexion, $sql) or exit(mysqli_error($connexion));
 
-    redirectWithSuccess('../admin/skill', "La compétence '$title' est ajoutée à la base de données.");
+    redirectWithSuccess('../admin/project', "La réalisation '$title' a été ajoutée.");
 }
 
 // FONCTION UPDATE (quand on modifie une compétence)
-function updateSkill($id)
+function updateProject($id)
 {
     require __DIR__ . DIRECTORY_SEPARATOR . 'authentificationAdmin.php';
 
-    checkSkillForm("../admin/skill/updateSkill.php?id=$id");
+    checkProjectForm("../admin/project/updateProject.php?id=$id");
 
     // CONNEXION BDD
     require dirname(__DIR__) . DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARATOR . 'databaseConnexion.php';
@@ -122,13 +123,13 @@ function updateSkill($id)
 
             // Sauvegarde le nom de la nouvelle image en BDD
             $sql = "
-                    UPDATE skill
+                    UPDATE project
                     SET image = '$newImageName'
                     WHERE id = $id
                     ";
             mysqli_query($connexion, $sql) or exit(mysqli_error($connexion));
         } else {
-            redirectWithError('../admin/skill/createSkill.php', 'Erreur de fichier.');
+            redirectWithError('../admin/project/createProject.php', 'Erreur de fichier.');
         }
     }
 
@@ -141,42 +142,44 @@ function updateSkill($id)
 
     // Requête SQL pour modifier la compétence
     $sql = "
-        UPDATE skill
+        UPDATE project
         SET title = '$title',
         type = '$type',
         text = '$text',
         link = '$link',
         active = '$active'
-        WHERE id_skill = $id
+        WHERE id_project = $id
     ";
 
     // Envoie de la requête
     // Retourne une erreur si la requête echoue
     mysqli_query($connexion, $sql) or exit(mysqli_error($connexion));
 
-    redirectWithSuccess("../admin/skill/detailSkill.php?id=$id", 'Compétence modifiée.');
+    redirectWithSuccess("../admin/project/detailProject.php?id=$id", 'Compétence modifiée.');
 }
 
 // FONCTION DELETE (quand on supprime une compétence)
-function deleteSkill($id)
+function deleteProject($id)
 {
     require __DIR__ . DIRECTORY_SEPARATOR . 'authentificationAdmin.php';
     require dirname(__DIR__) . DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARATOR . 'databaseConnexion.php';
     deleteImageFromDisk($connexion, $id);
     $sql = "
-    DELETE FROM skill
-    WHERE id_skill = $id
+    DELETE FROM project
+    WHERE id_project = $id
     ";
     mysqli_query($connexion, $sql) or exit(mysqli_error($connexion));
-    redirectWithSuccess('../admin/skill', "Compétence n°$id supprimée.");
+    redirectWithSuccess('../admin/project', "Compétence n°$id supprimée.");
 }
 
 // FONCTION CHECK FORM (vérifie la validité du formulaire, prend le chemin de redirection en param, en cas d'invalidité du form)
-function checkSkillForm($redirectionPath)
+function checkProjectForm($redirectionPath)
 {
+    var_dump($_POST);
+    exit;
     // Vérifie si les champs obligatoires sont remplis
     if (!$_POST['title']) redirectWithError($redirectionPath, 'Le titre est obligatoire.');
-    if (!$_POST['type']) redirectWithError($redirectionPath, 'Le type est obligatoire.');
+    if (!$_POST['date-start']) redirectWithError($redirectionPath, 'La date de début est obligatoire.');
 
     // Vérifie la longueur des caractères saisies
     if (strlen($_POST['title']) > 255) {
@@ -189,13 +192,8 @@ function checkSkillForm($redirectionPath)
         redirectWithError($redirectionPath, 'Le lien ne doit pas dépasser 255 caractères.');
     }
 
-    // Vérifie la valeur du type
-    if ($_POST['type'] !== '1' && $_POST['type'] !== '2') {
-        redirectWithError($redirectionPath, 'Le type n\'est pas défini.');
-    }
-
     // Vérifie si le statut est bien défini
-    if ($_POST['isActive'] !== '1' && $_POST['isActive'] !== '2') {
-        redirectWithError($redirectionPath, 'Le statut n\'est pas défini.');
-    }
+    // if ($_POST['isActive'] !== '1' && $_POST['isActive'] !== '2') {
+    //     redirectWithError($redirectionPath, 'Le statut n\'est pas défini.');
+    // }
 }
