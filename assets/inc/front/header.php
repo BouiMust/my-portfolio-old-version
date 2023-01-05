@@ -2,7 +2,7 @@
     <div class="container">
 
         <header>
-            <nav class="navbar navbar-expand-lg navbar-dark bg-dark my-2" style="border: 2px solid #666;">
+            <nav class="navbar navbar-expand-lg my-2" style="border: 2px solid #666;">
                 <div class="container-fluid">
                     <a class="navbar-brand" href="http://localhost/portfolio">PORTFOLIO</a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -15,9 +15,6 @@
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="http://localhost/portfolio/contact.php">CONTACT</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">ESPACE MEMBRE</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link link-danger" href="http://localhost/portfolio/admin/">ESPACE ADMIN</a>
