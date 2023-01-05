@@ -1,8 +1,7 @@
 body {
     max-width: 1200px;
     width: 100%;
-    background: rgb(40, 81, 142);
-    color: silver;
+    background: rgb(212, 255, 254);
     margin: auto;
 }
 
@@ -16,4 +15,18 @@ body {
     background-color: #dc3545;
     color: #FFF;
     font-style: italic !important;
+}
+
+main {
+    /* Pour fixer le footer si le main n'est pas assez grand */
+    min-height: 82vh;
+}
+
+header,
+main>div {
+    background: rgb(191, 230, 229);
+}
+
+.pointer {
+    cursor: pointer;
 }
