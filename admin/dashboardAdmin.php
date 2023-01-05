@@ -1,21 +1,22 @@
-<!-- TABLEAU DE BORD (ADMIN UNIQUEMENT) -->
+<!-- TABLEAU DE BORD (ACCES ADMIN UNIQUEMENT) -->
 
 <?php include '../assets/inc/back/head.php' ?>
 <title>Tableau de bord</title>
 
 <?php require '../core/authentificationAdmin.php' ?>
 
-<!-- COUNT USERS FROM DB -->
 <?php
-require '../core/userController.php';
-$usersLength = countAllUsers();
+// COUNT DATAS FROM DB
+require '../core/generalController.php';
+$usersLength = countAllDatas('user');
+$skillsLength = countAllDatas('skill');
 ?>
 
 <?php include '../assets/inc/back/header.php' ?>
 
 <main>
-    <div class="bg-dark mb-2" style="border: 2px solid #666;">
-        <h4 class="text-center pt-2">TABLEAU DE BORD</h4>
+    <div class="mb-2" style="border: 2px solid #666;">
+        <h4 class="text-center pt-1">TABLEAU DE BORD</h4>
     </div>
     <?php
     if (isset($_SESSION['message'])) {
@@ -23,26 +24,26 @@ $usersLength = countAllUsers();
         unset($_SESSION['message']);
     };
     ?>
-    <div class="row bg-dark mx-auto text-center justify-content-center py-4" style="border: 2px solid #666;">
-        <div class="col-5 m-3 border pt-3 pb-2" style="background:#345">
+    <div class="row mx-auto text-center justify-content-center py-4" style="border: 2px solid #666;">
+        <div class="col-5 m-3 border border-secondary shadow pt-3 pb-2" style="background:#FEE">
             <h5>Nombre d'utilisateurs inscris</h5>
             <p class="fs-3"><?= $usersLength ?></p>
-            <p><a href="./user/manageUsers.php" class="btn btn-secondary" style="transition:300ms" onmouseout="this.style.filter='invert(0)';this.style.transform='scale(1)'" onmouseover="this.style.filter='invert(1)';this.style.transform='scale(1.1)'">Voir la liste</a></p>
+            <p><a href="./user" class="btn btn-secondary" style="transition:300ms" onmouseout="this.style.filter='invert(0)';this.style.transform='scale(1)'" onmouseover="this.style.filter='invert(1)';this.style.transform='scale(1.1)'">Voir la liste</a></p>
         </div>
-        <div class="col-5 m-3 border pt-3 pb-2" style="background:#435">
+        <div class="col-5 m-3 border border-secondary shadow pt-3 pb-2" style="background:#FFE">
             <h5>Nombre de compétences</h5>
-            <p class="fs-3">5</p>
-            <p><a href="./skill/manageSkills.php" class="btn btn-secondary" style="transition:300ms" onmouseout="this.style.filter='invert(0)';this.style.transform='scale(1)'" onmouseover="this.style.filter='invert(1)';this.style.transform='scale(1.1)'">Voir la liste</a></p>
+            <p class="fs-3"><?= $skillsLength ?></p>
+            <p><a href="./skill" class="btn btn-secondary" style="transition:300ms" onmouseout="this.style.filter='invert(0)';this.style.transform='scale(1)'" onmouseover="this.style.filter='invert(1)';this.style.transform='scale(1.1)'">Voir la liste</a></p>
         </div>
-        <div class="col-5 m-3 border pt-3 pb-2" style="background:#543">
+        <div class="col-5 m-3 border border-secondary shadow pt-3 pb-2" style="background:#EFF">
             <h5>Nombre de réalisations</h5>
-            <p class="fs-3">12</p>
-            <p><a href="./project/manageProjects.php" class="btn btn-secondary" style="transition:300ms" onmouseout="this.style.filter='invert(0)';this.style.transform='scale(1)'" onmouseover="this.style.filter='invert(1)';this.style.transform='scale(1.1)'">Voir la liste</a></p>
+            <p class="fs-3">-</p>
+            <p><a href="./project" class="btn btn-secondary" style="transition:300ms" onmouseout="this.style.filter='invert(0)';this.style.transform='scale(1)'" onmouseover="this.style.filter='invert(1)';this.style.transform='scale(1.1)'">Voir la liste</a></p>
         </div>
-        <div class="col-5 m-3 border pt-3 pb-2" style="background:#354">
+        <div class="col-5 m-3 border border-secondary shadow pt-3 pb-2" style="background:#EEF">
             <h5>Nombre de messages</h5>
-            <p class="fs-3">230</p>
-            <p><a href="./message/manageMessages.php" class="btn btn-secondary" style="transition:300ms" onmouseout="this.style.filter='invert(0)';this.style.transform='scale(1)'" onmouseover="this.style.filter='invert(1)';this.style.transform='scale(1.1)'">Voir la liste</a></p>
+            <p class="fs-3">-</p>
+            <p><a href="./message" class="btn btn-secondary" style="transition:300ms" onmouseout="this.style.filter='invert(0)';this.style.transform='scale(1)'" onmouseover="this.style.filter='invert(1)';this.style.transform='scale(1.1)'">Voir la liste</a></p>
         </div>
     </div>
 </main>
