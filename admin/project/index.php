@@ -32,10 +32,12 @@ $projects = getAllProjects();
             <!-- EN-TETES DU TABLEAU -->
             <tr>
                 <th class="col-1">Id</th>
-                <th class="col-1">Image</th>
-                <th class="col-2">Titre</th>
-                <th class="col-3">Description</th>
-                <th class="col-2">Statut</th>
+                <th class="col-3">Image</th>
+                <th class="col-3">Titre</th>
+                <th class="col-4">Description</th>
+                <th class="col-2">Début</th>
+                <th class="col-1">Fin</th>
+                <!-- <th class="col-2">Statut</th> -->
                 <th class="text-center col-1">Voir</th>
                 <th class="text-center col-1">Modifier</th>
                 <th class="text-center col-1">Supprimer</th>
@@ -44,18 +46,19 @@ $projects = getAllProjects();
             <!-- AFFICHE TOUTES LES COMPETENCES -->
             <?php
             foreach ($projects as $project) :
-                $type = $project['type'] === '1' ? '<span style="color:red;font-weight:bold;">Front-end</span>' : '<span style="color:blue;font-weight:bold;">Back-end</span>';
-                $text = !empty($project['text']) ? $project['text'] : '&#8211';
                 $image = !empty($project['image']) ? $project['image'] : 'no-image.png';
-                $active = $project['active'] === '1' ? 'Activé' : 'Désactivé';
+                $text = !empty($project['text']) ? $project['text'] : '&#8211';
+                $date_start = implode('/', array_reverse(explode('-', $project['date_start'])));
+                $date_end = implode('/', array_reverse(explode('-', $project['date_end'])));
+                // $active = $project['active'] === '1' ? 'Activé' : 'Désactivé';
                 echo "
                     <tr class='align-middle'>
                     <td>{$project['id_project']}</td>
                     <td><img src='../../assets/images/upload/$image' alt='image de la competence' width=70% class='rounded'></td>
                     <td class='text-break'>{$project['title']}</td>
-                    <td>$type</td>
                     <td class='text-break'>$text</td>
-                    <td>$active</td>
+                    <td>$date_start</td>
+                    <td>$date_end</td>
                     <td class='text-center'><a href='./detailProject.php?id={$project['id_project']}' title='Voir'>
                     <div class='btn btn-success fs-5 py-1 px-2 border border-dark'>&#128209;</div></a></td>
                     <td class='text-center'><a href='./updateProject.php?id={$project['id_project']}' title='Modifier'>
