@@ -79,7 +79,7 @@ function createProject()
     $title = strip_tags(ucwords(strtolower($_POST['title'])));
     $text = $_POST['text'];
     $date_start = $_POST['date-start'];
-    $date_end = $_POST['date-end'];
+    $date_end = !empty($_POST['date-end']) ? $_POST['date-end'] : null;
     $image = $imageName;
     $link = $_POST['link'];
     // $active = (int)$_POST['active'];
@@ -175,8 +175,6 @@ function deleteProject($id)
 // FONCTION CHECK FORM (vérifie la validité du formulaire, prend le chemin de redirection en param, en cas d'invalidité du form)
 function checkProjectForm($redirectionPath)
 {
-    var_dump($_POST);
-    exit;
     // Vérifie si les champs obligatoires sont remplis
     if (!$_POST['title']) redirectWithError($redirectionPath, 'Le titre est obligatoire.');
     if (!$_POST['date-start']) redirectWithError($redirectionPath, 'La date de début est obligatoire.');
