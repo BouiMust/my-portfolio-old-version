@@ -66,13 +66,13 @@
                 </div>
 
                 <!-- ACTIVE -->
-                <div class="text-center my-3">
-                    <label for="isActive">Activer la réalisation ?</label>
-                    <select class='pointer' style='padding: 10px;' name='isActive' id='isActive'>
+                <!-- <div class="text-center my-3">
+                    <label for="active">Activer la réalisation ?</label>
+                    <select class='pointer' style='padding: 10px;' name='active' id='active'>
                         <option value=1>Activer</option>
                         <option value=2>Désactiver</option>
                     </select>
-                </div>
+                </div> -->
 
                 <!-- SUBMIT BUTTON -->
                 <button type="submit" name="submit" class="btn btn-success border border-dark w-100">ENREGISTRER</button>
