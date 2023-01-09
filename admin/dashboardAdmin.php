@@ -10,6 +10,7 @@
 require '../core/generalController.php';
 $usersLength = countAllDatas('user');
 $skillsLength = countAllDatas('skill');
+$projectsLength = countAllDatas('project');
 ?>
 
 <?php include '../assets/inc/back/header.php' ?>
@@ -37,7 +38,7 @@ $skillsLength = countAllDatas('skill');
         </div>
         <div class="col-5 m-3 border border-secondary shadow pt-3 pb-2" style="background:#EFF">
             <h5>Nombre de réalisations</h5>
-            <p class="fs-3">-</p>
+            <p class="fs-3"><?= $projectsLength ?></p>
             <p><a href="./project" class="btn btn-secondary" style="transition:300ms" onmouseout="this.style.filter='invert(0)';this.style.transform='scale(1)'" onmouseover="this.style.filter='invert(1)';this.style.transform='scale(1.1)'">Voir la liste</a></p>
         </div>
         <div class="col-5 m-3 border border-secondary shadow pt-3 pb-2" style="background:#EEF">
