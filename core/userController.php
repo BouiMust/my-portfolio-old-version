@@ -3,6 +3,7 @@
 // Ce fichier permet de :
 // - logger l'user en récupérant les champs du formulaire admin/index.php
 // - deconnecter l'user en cliquant le bouton 'deconnecter'
+// - récupérer, créer, modifier et supprimer un user
 
 // Démarre la session si aucune existe
 if (session_status() === 1) session_start();
