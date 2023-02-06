@@ -25,6 +25,7 @@
                 <div class="row justify-content-center mx-auto">
 
                     <input type="hidden" name="action" value="create">
+                    <input type="hidden" name="path" value=<?= $_SERVER['SCRIPT_NAME'] . '#messageForm' ?>>
 
                     <div class="col-6">
                         <div class="my-1">
@@ -51,7 +52,6 @@
                             <input class="form-control pointer border border-dark" type="tel" name="phone" id="phone">
                         </div>
                     </div>
-
 
                     <div class="my-1">
                         <label for="message">Message * :</label>
