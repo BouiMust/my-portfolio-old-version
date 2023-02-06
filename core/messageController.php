@@ -2,6 +2,7 @@
 // Ce fichier permet de récupérer, créer, modifier et supprimer un message
 
 if (session_status() === 1) session_start();
+
 $action = '';
 
 if (isset($_POST['action'])) {
@@ -9,7 +10,7 @@ if (isset($_POST['action'])) {
 }
 
 // IMPORT FONCTIONS GENERALES
-require __DIR__ . DIRECTORY_SEPARATOR . 'generalController.php';
+require_once __DIR__ . DIRECTORY_SEPARATOR . 'generalController.php';
 
 switch ($action) {
     case 'create':
@@ -25,23 +26,16 @@ switch ($action) {
         break;
 }
 
-// FUNCTION GET ALL MESSAGES (quand on récupère toutes les compétences)
+// FUNCTION GET ALL MESSAGES (quand on récupère tous les messages)
 function getAllMessages()
 {
     require dirname(__DIR__) . DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARATOR . 'databaseConnexion.php';
-    $sql = "SELECT * FROM message";
+    $sql = "SELECT * FROM message ORDER BY `created_at` DESC";
     $query = mysqli_query($connexion, $sql) or exit(mysqli_error($connexion));
-    $messages = mysqli_fetch_all($query, MYSQLI_ASSOC);
-    function sortById($a, $b)
-    {
-        if ($a == $b) return 0;
-        return ($a < $b) ? -1 : 1;
-    }
-    usort($messages, "sortById");
-    return $messages;
+    return mysqli_fetch_all($query, MYSQLI_ASSOC);
 }
 
-// FUNCTION GET ONE MESSAGE (quand on récupère une compétence depuis son id)
+// FUNCTION GET ONE MESSAGE (quand on récupère un message depuis son id)
 function getOneMessage($id)
 {
     require dirname(__DIR__) . DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARATOR . 'databaseConnexion.php';
@@ -50,84 +44,64 @@ function getOneMessage($id)
     return mysqli_fetch_assoc($query);
 }
 
-// FUNCTION CREATE (quand on crée une compétence)
+// FUNCTION CREATE (quand on crée un message)
 function createMessage()
 {
-    require __DIR__ . DIRECTORY_SEPARATOR . 'authentificationAdmin.php';
+    // Cette action ne requiert pas d'authentification
+    // require __DIR__ . DIRECTORY_SEPARATOR . 'authentificationAdmin.php';
 
-    checkMessageForm($_POST['page']);
+    // Permet d'afficher le message dans la section message
+    $_SESSION['messageSection'] = true;
+
+    checkMessageForm($_POST['path']);
 
     require dirname(__DIR__) . DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARATOR . 'databaseConnexion.php';
 
-    $first_name = strip_tags(addslashes(trim(ucfirst($_POST["first_name"]))));
-    $last_name = strip_tags(addslashes(trim(ucfirst($_POST["last_name"]))));
-    $email = strip_tags(trim(strtolower($_POST["email"])));
-    $company = strip_tags(addslashes(trim(ucfirst($_POST["company"]))));
-    $phone = (int)$_POST['phone'];
-    $message = (int)$_POST["message"];
+    $firstName = htmlspecialchars(addslashes(trim(ucfirst($_POST["first_name"]))));
+    $lastName = htmlspecialchars(addslashes(trim(ucfirst($_POST["last_name"]))));
+    $email = htmlspecialchars(trim(strtolower($_POST["email"])));
+    $company = htmlspecialchars(addslashes(trim(ucfirst($_POST["company"]))));
+    $phone = htmlspecialchars(addslashes(trim($_POST['phone'])));
+    $message = htmlspecialchars(addslashes(trim($_POST["message"])));
 
     $sql = "
-    INSERT INTO message (first_name,last_name,email,company,phone,message)
-    VALUE ('$first_name', '$last_name', '$email', '$company', '$phone', '$message')
+    INSERT INTO message (first_name,last_name,email,company,phone,text,created_at)
+    VALUE ('$firstName', '$lastName', '$email', '$company', '$phone', '$message', NOW())
     ";
 
     mysqli_query($connexion, $sql) or exit(mysqli_error($connexion));
 
-    redirectWithSuccess($_POST['page'], "Le message de $first_name $last_name a été ajouté.");
+    redirectWithSuccess($_POST['path'], "Votre message a été ajouté.");
 }
 
-// FONCTION UPDATE (quand on modifie une compétence)
+// FONCTION UPDATE (quand on modifie un message)
 function updateMessage($id)
 {
+    // exit(var_dump($_POST));
     require __DIR__ . DIRECTORY_SEPARATOR . 'authentificationAdmin.php';
 
-    checkMessageForm("../admin/message/updateMessage.php?id=$id");
+    checkMessageForm($_POST['path']);
 
     // CONNEXION BDD
     require dirname(__DIR__) . DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARATOR . 'databaseConnexion.php';
 
-    // Vérifie si l'utilisateur a chargé un fichier
-    if (is_uploaded_file($_FILES['image']['tmp_name'])) {
+    // On formatte les données
+    $firstName = htmlspecialchars(addslashes(trim(ucfirst($_POST["first_name"]))));
+    $lastName = htmlspecialchars(addslashes(trim(ucfirst($_POST["last_name"]))));
+    $email = htmlspecialchars(trim(strtolower($_POST["email"])));
+    $company = htmlspecialchars(addslashes(trim(ucfirst($_POST["company"]))));
+    $phone = htmlspecialchars(addslashes(trim($_POST['phone'])));
+    $message = htmlspecialchars(addslashes(trim($_POST["message"])));
 
-        // Vérifie si le fichier chargé est une image
-        if (strtolower(explode("/", $_FILES['image']['type'])[0]) === 'image') {
-
-            // Nomme la nouvelle image
-            $newImageName = nameImage();
-
-            // Sauvegarde la nouvelle image sur le disque
-            saveImageToDisk($newImageName);
-
-            // Supprime l'ancienne image du disque
-            deleteImageFromDisk($connexion, $id);
-
-            // Sauvegarde le nom de la nouvelle image en BDD
-            $sql = "
-                    UPDATE message
-                    SET image = '$newImageName'
-                    WHERE id = $id
-                    ";
-            mysqli_query($connexion, $sql) or exit(mysqli_error($connexion));
-        } else {
-            redirectWithError('../admin/message/createMessage.php', 'Erreur de fichier.');
-        }
-    }
-
-    // On récupère toutes les données du formulaire
-    $title = strip_tags(ucwords(strtolower($_POST['title'])));
-    $type = (int)$_POST['type'];
-    $text = $_POST['text'];
-    $link = $_POST['link'];
-    $active = (int)$_POST['isActive'];
-
-    // Requête SQL pour modifier la compétence
+    // Requête SQL pour modifier le message
     $sql = "
         UPDATE message
-        SET title = '$title',
-        type = '$type',
-        text = '$text',
-        link = '$link',
-        active = '$active'
+        SET first_name = '$firstName',
+        last_name = '$lastName',
+        email = '$email',
+        company = '$company',
+        phone = '$phone',
+        text = '$message'
         WHERE id = $id
     ";
 
@@ -135,21 +109,20 @@ function updateMessage($id)
     // Retourne une erreur si la requête echoue
     mysqli_query($connexion, $sql) or exit(mysqli_error($connexion));
 
-    redirectWithSuccess("../admin/message/detailMessage.php?id=$id", 'Compétence modifiée.');
+    redirectWithSuccess("../admin/message/detailMessage.php?id=$id", 'Message modifié.');
 }
 
-// FONCTION DELETE (quand on supprime une compétence)
+// FONCTION DELETE (quand on supprime un message)
 function deleteMessage($id)
 {
     require __DIR__ . DIRECTORY_SEPARATOR . 'authentificationAdmin.php';
     require dirname(__DIR__) . DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARATOR . 'databaseConnexion.php';
-    deleteImageFromDisk($connexion, $id);
     $sql = "
     DELETE FROM message
     WHERE id = $id
     ";
     mysqli_query($connexion, $sql) or exit(mysqli_error($connexion));
-    redirectWithSuccess('../admin/message', "Compétence n°$id supprimée.");
+    redirectWithSuccess('../admin/message', "Message n°$id supprimé.");
 }
 
 // FONCTION CHECK FORM (vérifie la validité du formulaire, prend le chemin de redirection en param, en cas d'invalidité du form)
@@ -176,10 +149,10 @@ function checkMessageForm($redirectionPath)
     if (strlen($_POST['email']) > 255) {
         redirectWithError($redirectionPath, 'L\'email doit comporter entre 1 et 255 caractères');
     }
+    if (strlen($_POST['message']) > 1000) {
+        redirectWithError($redirectionPath, 'Le message ne doit pas dépasser 1000 caractères.');
+    }
     if ($_POST['phone'] && strlen($_POST['phone']) > 255) {
         redirectWithError($redirectionPath, 'Le n° téléphone ne doit pas dépasser 255 caractères.');
-    }
-    if ($_POST['message'] && strlen($_POST['message']) > 255) {
-        redirectWithError($redirectionPath, 'Le message ne doit pas dépasser 255 caractères.');
     }
 }
