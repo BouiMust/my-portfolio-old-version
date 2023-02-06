@@ -18,7 +18,7 @@ if (isset($_POST['action'])) {
 }
 
 // IMPORT FONCTIONS GENERALES
-require __DIR__ . DIRECTORY_SEPARATOR . 'generalController.php';
+require_once __DIR__ . DIRECTORY_SEPARATOR . 'generalController.php';
 
 // Execute une fonction selon la nature de l'action
 switch ($action) {
@@ -121,11 +121,6 @@ function getAllUsers()
     $users = mysqli_fetch_all($query, MYSQLI_ASSOC);
 
     // Trie les utilisateurs par id
-    function sortById($a, $b)
-    {
-        if ($a == $b) return 0;
-        return ($a < $b) ? -1 : 1;
-    }
     usort($users, "sortById");
 
     // Retourne les users
