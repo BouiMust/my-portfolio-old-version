@@ -9,7 +9,7 @@ if (isset($_POST['action'])) {
 }
 
 // IMPORT FONCTIONS GENERALES
-require __DIR__ . DIRECTORY_SEPARATOR . 'generalController.php';
+require_once __DIR__ . DIRECTORY_SEPARATOR . 'generalController.php';
 
 switch ($action) {
     case 'create':
@@ -26,17 +26,18 @@ switch ($action) {
 }
 
 // FUNCTION GET ALL SKILLS (quand on récupère toutes les compétences)
-function getAllSkills()
+function getAllSkills(string $statut = null): array
 {
     require dirname(__DIR__) . DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARATOR . 'databaseConnexion.php';
-    $sql = "SELECT * FROM skill";
+
+    // Récupère seulement les compétences actives
+    if ($statut === 'active') {
+        $sql = "SELECT * FROM skill WHERE `active` = 1";
+    } else {
+        $sql = "SELECT * FROM skill";
+    }
     $query = mysqli_query($connexion, $sql) or exit(mysqli_error($connexion));
     $skills = mysqli_fetch_all($query, MYSQLI_ASSOC);
-    function sortById($a, $b)
-    {
-        if ($a == $b) return 0;
-        return ($a < $b) ? -1 : 1;
-    }
     usort($skills, "sortById");
     return $skills;
 }
@@ -118,17 +119,17 @@ function updateSkill($id)
             saveImageToDisk($newImageName);
 
             // Supprime l'ancienne image du disque
-            deleteImageFromDisk($connexion, $id);
+            deleteImageFromDisk($connexion, $id, 'skill');
 
             // Sauvegarde le nom de la nouvelle image en BDD
             $sql = "
                     UPDATE skill
                     SET image = '$newImageName'
-                    WHERE id = $id
+                    WHERE id_skill = $id
                     ";
             mysqli_query($connexion, $sql) or exit(mysqli_error($connexion));
         } else {
-            redirectWithError('../admin/skill/createSkill.php', 'Erreur de fichier.');
+            redirectWithError("../admin/skill/updateSkill.php?id=$id", 'Erreur de fichier.');
         }
     }
 
@@ -162,7 +163,7 @@ function deleteSkill($id)
 {
     require __DIR__ . DIRECTORY_SEPARATOR . 'authentificationAdmin.php';
     require dirname(__DIR__) . DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARATOR . 'databaseConnexion.php';
-    deleteImageFromDisk($connexion, $id);
+    deleteImageFromDisk($connexion, $id, 'skill');
     $sql = "
     DELETE FROM skill
     WHERE id_skill = $id
@@ -195,7 +196,7 @@ function checkSkillForm($redirectionPath)
     }
 
     // Vérifie si le statut est bien défini
-    if ($_POST['isActive'] !== '1' && $_POST['isActive'] !== '2') {
+    if ($_POST['isActive'] !== '0' && $_POST['isActive'] !== '1') {
         redirectWithError($redirectionPath, 'Le statut n\'est pas défini.');
     }
 }
