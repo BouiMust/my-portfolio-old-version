@@ -11,6 +11,7 @@ require '../core/generalController.php';
 $usersLength = countAllDatas('user');
 $skillsLength = countAllDatas('skill');
 $projectsLength = countAllDatas('project');
+$messagesLength = countAllDatas('message');
 ?>
 
 <?php include '../assets/inc/back/header.php' ?>
@@ -26,26 +27,39 @@ $projectsLength = countAllDatas('project');
     };
     ?>
     <div class="row mx-auto text-center justify-content-center py-4" style="border: 2px solid #666;">
-        <div class="col-5 m-3 border border-secondary shadow pt-3 pb-2" style="background:#FEE">
-            <h5>Nombre d'utilisateurs inscris</h5>
-            <p class="fs-3"><?= $usersLength ?></p>
-            <p><a href="./user" class="btn btn-secondary" style="transition:300ms" onmouseout="this.style.filter='invert(0)';this.style.transform='scale(1)'" onmouseover="this.style.filter='invert(1)';this.style.transform='scale(1.1)'">Voir la liste</a></p>
+
+        <div class="col-5 p-0 m-3 shadow text-decoration-none text-danger" style="background:#EEF;max-width:400px;transition:300ms" onmouseout="this.style.transform='scale(1)'" onmouseover="this.style.transform='scale(1.05)'">
+            <a href="./user" class="text-decoration-none text-dark d-block border border-secondary h-100 w-100 pt-4 pb-3 rounded" style="background:#FEE;">
+                <h5>Nombre d'utilisateurs</h5>
+                <p class="fs-4"><?= $usersLength ?></p>
+                <p class="btn border border-secondary shadow" style="transition:300ms" onmouseout="this.style.color='initial';this.style.background='initial'" onmouseover="this.style.color='#FFF';this.style.background='#111'">Voir la liste</p>
+            </a>
         </div>
-        <div class="col-5 m-3 border border-secondary shadow pt-3 pb-2" style="background:#FFE">
-            <h5>Nombre de compétences</h5>
-            <p class="fs-3"><?= $skillsLength ?></p>
-            <p><a href="./skill" class="btn btn-secondary" style="transition:300ms" onmouseout="this.style.filter='invert(0)';this.style.transform='scale(1)'" onmouseover="this.style.filter='invert(1)';this.style.transform='scale(1.1)'">Voir la liste</a></p>
+
+        <div class="col-5 p-0 m-3 shadow text-decoration-none text-danger" style="background:#EEF;max-width:400px;transition:300ms" onmouseout="this.style.transform='scale(1)'" onmouseover="this.style.transform='scale(1.05)'">
+            <a href="./skill" class="text-decoration-none text-dark d-block border border-secondary h-100 w-100 pt-4 pb-3 rounded" style="background:#FFE;">
+                <h5>Nombre de compétences</h5>
+                <p class="fs-4"><?= $skillsLength ?></p>
+                <p class="btn border border-secondary shadow" style="transition:300ms" onmouseout="this.style.color='initial';this.style.background='initial'" onmouseover="this.style.color='#FFF';this.style.background='#111'">Voir la liste</p>
+            </a>
         </div>
-        <div class="col-5 m-3 border border-secondary shadow pt-3 pb-2" style="background:#EFF">
-            <h5>Nombre de réalisations</h5>
-            <p class="fs-3"><?= $projectsLength ?></p>
-            <p><a href="./project" class="btn btn-secondary" style="transition:300ms" onmouseout="this.style.filter='invert(0)';this.style.transform='scale(1)'" onmouseover="this.style.filter='invert(1)';this.style.transform='scale(1.1)'">Voir la liste</a></p>
+
+        <div class="col-5 p-0 m-3 shadow text-decoration-none text-danger" style="background:#EEF;max-width:400px;transition:300ms" onmouseout="this.style.transform='scale(1)'" onmouseover="this.style.transform='scale(1.05)'">
+            <a href="./project" class="text-decoration-none text-dark d-block border border-secondary h-100 w-100 pt-4 pb-3 rounded" style="background:#EFF;">
+                <h5>Nombre de réalisations</h5>
+                <p class="fs-4"><?= $projectsLength ?></p>
+                <p class="btn border border-secondary shadow" style="transition:300ms" onmouseout="this.style.color='initial';this.style.background='initial'" onmouseover="this.style.color='#FFF';this.style.background='#111'">Voir la liste</p>
+            </a>
         </div>
-        <div class="col-5 m-3 border border-secondary shadow pt-3 pb-2" style="background:#EEF">
-            <h5>Nombre de messages</h5>
-            <p class="fs-3">-</p>
-            <p><a href="./message" class="btn btn-secondary" style="transition:300ms" onmouseout="this.style.filter='invert(0)';this.style.transform='scale(1)'" onmouseover="this.style.filter='invert(1)';this.style.transform='scale(1.1)'">Voir la liste</a></p>
+
+        <div class="col-5 p-0 m-3 shadow text-decoration-none text-danger" style="background:#EEF;max-width:400px;transition:300ms" onmouseout="this.style.transform='scale(1)'" onmouseover="this.style.transform='scale(1.05)'">
+            <a href="./message" class="text-decoration-none text-dark d-block border border-secondary h-100 w-100 pt-4 pb-3 rounded" style="background:#EEF;">
+                <h5>Nombre de messages</h5>
+                <p class="fs-4"><?= $messagesLength ?></p>
+                <p class="btn border border-secondary shadow" style="transition:300ms" onmouseout="this.style.color='initial';this.style.background='initial'" onmouseover="this.style.color='#FFF';this.style.background='#111'">Voir la liste</p>
+            </a>
         </div>
+
     </div>
 </main>
 
