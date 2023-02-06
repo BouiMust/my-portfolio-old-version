@@ -17,16 +17,18 @@ $projects = getAllProjects();
 
 <main>
     <div class="mb-2" style="border: 2px solid #666;">
+        <a href="http://localhost/portfolio/admin/project/createProject.php">
+            <img src="../../assets/images/icons/add-button.svg" alt="ajouter un nouvel élément" title='Ajouter une réalisation' width=3% style='border-radius:50%;position:fixed; left:17vh;'>
+        </a>
         <h4 class="text-center pt-1">Gestion des Réalisations</h4>
     </div>
-    <?php
-    if (isset($_SESSION['message'])) {
-        echo $_SESSION['message'];
-        unset($_SESSION['message']);
-    };
-    ?>
     <div class="pb-0" style="border: 2px solid #666;">
-
+        <?php
+        if (isset($_SESSION['message'])) {
+            echo $_SESSION['message'];
+            unset($_SESSION['message']);
+        };
+        ?>
         <table class="table table-striped table-hover text-center">
 
             <!-- EN-TETES DU TABLEAU -->
@@ -37,7 +39,7 @@ $projects = getAllProjects();
                 <th class="col-4">Description</th>
                 <th class="col-2">Début</th>
                 <th class="col-1">Fin</th>
-                <!-- <th class="col-2">Statut</th> -->
+                <th class="col-2">Statut</th>
                 <th class="text-center col-1">Voir</th>
                 <th class="text-center col-1">Modifier</th>
                 <th class="text-center col-1">Supprimer</th>
@@ -49,16 +51,17 @@ $projects = getAllProjects();
                 $image = !empty($project['image']) ? $project['image'] : 'no-image.png';
                 $text = !empty($project['text']) ? $project['text'] : '&#8211';
                 $date_start = implode('/', array_reverse(explode('-', $project['date_start'])));
-                $date_end = implode('/', array_reverse(explode('-', $project['date_end'])));
-                // $active = $project['active'] === '1' ? 'Activé' : 'Désactivé';
+                $date_end = !is_null($project['date_end']) ? implode('/', array_reverse(explode('-', $project['date_end']))) : '&#8211';
+                $active = $project['active'] === '1' ? 'Activé' : 'Désactivé';
                 echo "
                     <tr class='align-middle'>
                     <td>{$project['id_project']}</td>
-                    <td><img src='../../assets/images/upload/$image' alt='image de la competence' width=70% class='rounded'></td>
+                    <td><img src='../../assets/images/upload/$image' alt='image de la competence' width=50% class='rounded'></td>
                     <td class='text-break'>{$project['title']}</td>
                     <td class='text-break'>$text</td>
                     <td>$date_start</td>
                     <td>$date_end</td>
+                    <td>$active</td>
                     <td class='text-center'><a href='./detailProject.php?id={$project['id_project']}' title='Voir'>
                     <div class='btn btn-success fs-5 py-1 px-2 border border-dark'>&#128209;</div></a></td>
                     <td class='text-center'><a href='./updateProject.php?id={$project['id_project']}' title='Modifier'>

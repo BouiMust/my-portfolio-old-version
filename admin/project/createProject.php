@@ -34,7 +34,7 @@
                 <!-- TEXT -->
                 <div class="my-2">
                     <label for="text">Description :</label>
-                    <textarea class="form-control pointer border border-dark" name="text" id="text" rows="3"></textarea>
+                    <textarea class="form-control pointer border border-dark" name="text" id="text" rows="é"></textarea>
                 </div>
 
                 <!-- DATE -->
@@ -66,13 +66,13 @@
                 </div>
 
                 <!-- ACTIVE -->
-                <!-- <div class="text-center my-3">
-                    <label for="active">Activer la réalisation ?</label>
-                    <select class='pointer' style='padding: 10px;' name='active' id='active'>
+                <div class="text-center my-3">
+                    <label for="isActive">Activer la réalisation ?</label>
+                    <select class='pointer' style='padding: 10px;' name='isActive' id='isActive'>
                         <option value=1>Activer</option>
-                        <option value=2>Désactiver</option>
+                        <option value=0>Désactiver</option>
                     </select>
-                </div> -->
+                </div>
 
                 <!-- SUBMIT BUTTON -->
                 <button type="submit" name="submit" class="btn btn-success border border-dark w-100">ENREGISTRER</button>
