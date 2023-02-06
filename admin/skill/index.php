@@ -17,6 +17,9 @@ $skills = getAllSkills();
 
 <main>
     <div class="mb-2" style="border: 2px solid #666;">
+        <a href="http://localhost/portfolio/admin/skill/createSkill.php">
+            <img src="../../assets/images/icons/add-button.svg" alt="ajouter un nouvel élément" title='Ajouter une réalisation' width=3% style='border-radius:50%;position:fixed; left:17vh;'>
+        </a>
         <h4 class="text-center pt-1">Gestion des Compétences</h4>
     </div>
     <?php

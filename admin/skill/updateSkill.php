@@ -19,16 +19,16 @@ $skill = getOneSkill($_GET['id']);
     <div class="mb-2" style="border: 2px solid #666;">
         <h4 class="text-center pt-1">Modifier la compétence n°<?= $skill['id_skill'] ?></h4>
     </div>
-    <?php
-    if (isset($_SESSION['message'])) {
-        echo $_SESSION['message'];
-        unset($_SESSION['message']);
-    };
-    ?>
     <div class="pb-0" style="border: 2px solid #666;">
         <div class="col-6 mx-auto py-3">
 
             <form action='../../core/skillController.php' method='post' enctype='multipart/form-data'>
+                <?php
+                if (isset($_SESSION['message'])) {
+                    echo $_SESSION['message'];
+                    unset($_SESSION['message']);
+                };
+                ?>
                 <table class="table table-striped">
 
                     <!-- AFFICHE LA COMPETENCE A MODIFIER -->
@@ -37,7 +37,7 @@ $skill = getOneSkill($_GET['id']);
                     <?php
                     $checkedType1 = $skill['type'] === '1' ? 'checked' : '';
                     $checkedType2 = $skill['type'] === '2' ? 'checked' : '';
-                    $selectedActive = $skill['active'] === '2' ? 'selected' : '';
+                    $selectedActive = $skill['active'] === '0' ? 'selected' : '';
                     ?>
 
                     <input type='hidden' name='action' value='update'>
@@ -82,7 +82,7 @@ $skill = getOneSkill($_GET['id']);
                         <td>
                             <select class='pointer' style='padding: 10px;' name='isActive' id='isActive'>
                                 <option value=1>Activé</option>
-                                <option value=2 <?= $selectedActive ?>>Désactivé</option>
+                                <option value=0 <?= $selectedActive ?>>Désactivé</option>
                             </select>
                         </td>
                     </tr>

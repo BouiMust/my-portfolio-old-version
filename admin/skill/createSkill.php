@@ -69,7 +69,7 @@
                     <label for="isActive">Activer la compétence ?</label>
                     <select class='pointer' style='padding: 10px;' name='isActive' id='isActive'>
                         <option value=1>Activer</option>
-                        <option value=2>Désactiver</option>
+                        <option value=0>Désactiver</option>
                     </select>
                 </div>
 
