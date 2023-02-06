@@ -1,7 +1,7 @@
 body {
     max-width: 1200px;
     width: 100%;
-    background: rgb(212, 255, 254);
+    background-image: url("../images/front-background.jpg");
     margin: auto;
 }
 
@@ -24,7 +24,7 @@ main {
 
 header,
 main>div {
-    background: rgb(191, 230, 229);
+    background: #EEE;
 }
 
 .pointer {
