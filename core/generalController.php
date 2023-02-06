@@ -65,13 +65,19 @@ function saveImageToDisk($imageName)
 }
 
 // FONCTION DE SUPPRESSION D'IMAGE DU DISQUE
-function deleteImageFromDisk($connexion, $id)
+function deleteImageFromDisk($connexion, $id, $table)
 {
     // Récupère le nom de l'ancienne image dans la BDD
-    $sql = "SELECT image FROM skill WHERE id_skill = $id";
+    $sql = "SELECT image FROM `$table` WHERE `id_$table` = $id";
     $query = mysqli_query($connexion, $sql) or exit(mysqli_error($connexion));
     $oldImageName = mysqli_fetch_assoc($query)['image'];
-
     // Supprime l'ancienne image du disque
     unlink(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'upload' . DIRECTORY_SEPARATOR . $oldImageName);
+}
+
+// TRIE UN TABLEAU
+function sortById($a, $b)
+{
+    if ($a == $b) return 0;
+    return ($a < $b) ? -1 : 1;
 }
